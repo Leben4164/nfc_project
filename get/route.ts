@@ -5,8 +5,11 @@ export async function GET(request : Request) {
     const res = request.json()
 
     try {
-        const record = await pb.collection('students')
-        console.log(record)
+        const record = await pb.collection('students').getList(1, 50, {
+            sort: '+studentId',
+        });
+        setItems(record.items);
+        console.log(record.items)
     } catch(error) {
         console.error(error)
     }
