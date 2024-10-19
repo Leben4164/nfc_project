@@ -8,7 +8,7 @@ export async function GET(request : Request) {
         const records =  await pb.collection('students').getFirstListItem(`uid="${res.uid}"`)
         //const values = records.map(record => record[res.propName]); // 속성 이름에 해당하는 값들만 배열로 만들기
         return new Response(JSON.stringify({
-            "record" : record
+            "record" : records
         }), { // 값 배열 반환
             headers: {
                 "Content-Type": "application/json",
