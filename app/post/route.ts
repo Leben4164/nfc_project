@@ -38,7 +38,6 @@ export async function POST(request: Request) {
             });
         
         return new Response(JSON.stringify({
-            "record" : record,
             "process" : "success"
         }), {
             headers: {
