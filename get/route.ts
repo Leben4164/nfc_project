@@ -1,17 +1,12 @@
-import PocketBase, { RecordModel } from 'pocketbase';
-import { useState, useEffect } from 'react';
+import PocketBase from 'pocketbase';
 
 export async function GET(request : Request) {
     const pb = new PocketBase(process.env.NEXT_PUBLIC_POCKETBASE_URL);
     const res = request.json()
-    const [items, setItems] = useState<RecordModel[]>([]);
 
     try {
-        const record = await pb.collection('students').getList(1, 50, {
-            sort: '+studentId',
-        });
-        setItems(record.items)
-        console.log(record.items)
+        const record = await pb.collection('students')
+        console.log(record)
     } catch(error) {
         console.error(error)
     }
