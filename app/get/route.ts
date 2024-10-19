@@ -16,11 +16,13 @@ export async function GET(request : Request) {
         });
     } catch(error) {
         console.error(error);
-        return new Response(JSON.stringify({ "error" : "Failed to fetch records" }), {
+        return new Response(JSON.stringify({
+            "process" : "fail"
+        }), {
             headers: {
                 "Content-Type": "application/json",
             },
-            status: 500,
+            status: 201,
         });
     }
 }
