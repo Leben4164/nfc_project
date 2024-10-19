@@ -36,20 +36,19 @@ export async function POST(request: Request) {
                 attendance: true,
                 attendanceTime: dateText()
             });
+        
+        return new Response(JSON.stringify({
+            "record" : record,
+            "process" : "success"
+        }), {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            status: 201,
+        });
 
         }
     } catch (error) {
         console.error(error);
     }
-
-
-
-    return new Response(JSON.stringify({
-        "process" : "success"
-    }), {
-        headers: {
-            "Content-Type": "application/json",
-        },
-        status: 201,
-    });
 }
