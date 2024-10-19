@@ -26,10 +26,11 @@ function monthToNumber(month: string) {
 
 export async function POST(request: Request) {
     const pb = new PocketBase(process.env.NEXT_PUBLIC_POCKETBASE_URL);
-    const res = await request.json();
+    const url = new URL(request.url);
+    const uid = url.searchParamsget("uid");
 
     try {
-        const record = await pb.collection('students').getFirstListItem(`uid="${res.uid}"`)
+        const record = await pb.collection('students').getFirstListItem(`uid="${uid}"`)
         if (record) {
 
             await pb.collection('students').update(record.id, {
