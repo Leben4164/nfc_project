@@ -18,9 +18,6 @@ import PocketBase from 'pocketbase'
  */
 function dateText() {
     const date = Date().split(" ")
-    /*
-    
-    */
     const dateText = date[3]     //년
         + "-"                    //-
         + monthToNumber(date[1]) //월(숫자)
