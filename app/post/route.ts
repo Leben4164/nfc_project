@@ -28,7 +28,7 @@ function dateText() {
         + date[2]                //일
         + " "                    //공백
         + date[4]                //시간(00:00:00)
-    return dateText              
+    return dateText
 }
 
 /**
@@ -41,26 +41,32 @@ function monthToNumber(month: string) {
 }
 
 export async function POST(request: Request) { //Post요청 처리
-    const pb = new PocketBase(process.env.NEXT_PUBLIC_POCKETBASE_URL); 
+    const pb = new PocketBase(process.env.NEXT_PUBLIC_POCKETBASE_URL);
     const res = await request.json(); //요청 본문 받아옴
 
     try {
         const record = await pb.collection('students').getFirstListItem(`uid="${res.uid}"`) //본문에서 받은 uid로 학생 판별
         if (record) {
 
-            await pb.collection('students').update(record.id, { 
+            await pb.collection('students').update(record.id, {
                 attendance: true,          //출석을 true로 바꾸고
                 attendanceTime: dateText() //요청을 보냈을 때 시간으로 출석 시간을 설정함
             });
-        
-        return new Response(JSON.stringify({
-            "process" : "success"
-        }), {
-            headers: {
-                "Content-Type": "application/json",
-            },
-            status: 201,
-        });
+
+            return new Response(JSON.stringify({
+                "process": "해당 UID에 해당하는 학생의 출석현황을 갱신하는데 성공했습니다",
+                "student_name": record.name,
+                "student_number": record.studentId,
+                "uid": record.uid,
+                "attendence": record.attendence,
+                "attendence_time": record.attendenceTime,
+                "what_happened": record.whatHappened,
+            }), {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                status: 201,
+            });
 
         }
     } catch (error) {
