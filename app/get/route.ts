@@ -1,6 +1,6 @@
 import PocketBase from 'pocketbase';
 
-export async function GET(request: Request) {
+export async function GET(request: Request) { //Get 요청 처리
   const pb = new PocketBase(process.env.NEXT_PUBLIC_POCKETBASE_URL);
 
   // URL 쿼리 매개변수에서 propName 가져오기
@@ -11,7 +11,6 @@ export async function GET(request: Request) {
     const records = await pb.collection("students").getFullList(); // 모든 레코드 가져오기
     const values = records.map((record) => record[propName!]); // 속성 이름에 해당하는 값들만 배열로 만들기
     return new Response(JSON.stringify(values), {
-      // 값 배열 반환
       headers: {
         "Content-Type": "application/json",
       },

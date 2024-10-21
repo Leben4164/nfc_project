@@ -1,4 +1,4 @@
-'use client';
+'use client' //client component 선언
 
 import React, { useState, useEffect } from 'react';
 import PocketBase from 'pocketbase';
@@ -8,16 +8,15 @@ export function Reason() {
   const [whatHappened, setWhatHappened] = useState("");
   const pb = new PocketBase(process.env.NEXT_PUBLIC_POCKETBASE_URL);
 
-  async function updateWhatHappened() {
-    console.log("검색할 이름:", studentName);
-    const record = await pb.collection('students').getFirstListItem(`name="${studentName}"`);
-    
+  async function updateWhatHappened() { //결석 사유 갱신하는 함수
+    const record = await pb.collection('students').getFirstListItem(`name="${studentName}"`); //입력된 이름에 해당하는 학생의 정보 저장
+
     await pb.collection('students').update(record.id, {
-      whatHappened: whatHappened
+      whatHappened: whatHappened //결석 사유를 입력된 값으로 설정
     });
 
-    setStudentName("")
-    setWhatHappened("")
+    setStudentName("") //입력창 공백으로 설정
+    setWhatHappened("") //입력창 공백으로 설정
     alert('결석 사유가 업데이트 되었습니다. 새로고침을 눌러주세요')
 
   }
@@ -57,45 +56,45 @@ export function Reason() {
 }
 
 const styles = `
-.reason-container {
-    position:
-    font-family: Arial, sans-serif;
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 35px;
-}
+  .reason-container {
+      position:
+      font-family: Arial, sans-serif;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 35px;
+  }
 
-.reason-title {
-    color: #333;
-    text-align: center;
-    margin-bottom: 20px;
-}
+  .reason-title {
+      color: #333;
+      text-align: center;
+      margin-bottom: 20px;
+  }
 
-.input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    align-items: center;
-}
+  .input-group {
+      display: flex;
+      flex-direction: column;
+        gap: 10px;
+      align-items: center;
+  }
 
-.uid-input {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    width: 200px;
-}
+  .uid-input {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      width: 200px;
+  }
 
-.action-button {
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
+  .action-button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+  }
 
-.action-button:hover {
-    background-color: #45a049;
-}
-`;
+  .action-button:hover {
+      background-color: #45a049;
+  }
+`
