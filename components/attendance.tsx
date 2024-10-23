@@ -11,12 +11,12 @@ export function Attendance() {
     const [adminPassword, setAdminPassword] = useState(''); // 관리자 비밀번호 상태 추가
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false); // 인증 모달 상태 추가
     const pb = new PocketBase(process.env.NEXT_PUBLIC_POCKETBASE_URL);
-        /**
-         * 새로고침 함수
-         * 
-         * DB에서 정보를 가져와 학번을 기준으로 오름차 순으로 정렬함
-         */
-        async function refresh() {
+    /**
+     * 새로고침 함수
+     * 
+     * DB에서 정보를 가져와 학번을 기준으로 오름차 순으로 정렬함
+     */
+    async function refresh() {
         const response = await pb.collection('students').getList(1, 50, { //students 콜렉션의 모든 정보를 가져옴
             sort: '+studentId', //학번 오름차순으로 정렬
         });
@@ -120,20 +120,23 @@ export function Attendance() {
             {isAuthModalOpen && (
                 <div className="auth-modal">
                     <h3>관리자 인증</h3>
-                    <input 
-                        type="text" 
-                        placeholder="아이디" 
-                        value={adminId} 
-                        onChange={(e) => setAdminId(e.target.value)} 
+                    <input
+                        type="text"
+                        placeholder="아이디"
+                        value={adminId}
+                        onChange={(e) => setAdminId(e.target.value)}
                     />
-                    <input 
-                        type="password" 
-                        placeholder="비밀번호" 
-                        value={adminPassword} 
-                        onChange={(e) => setAdminPassword(e.target.value)} 
+                    <input
+                        type="password"
+                        placeholder="비밀번호"
+                        value={adminPassword}
+                        onChange={(e) => setAdminPassword(e.target.value)}
                     />
-                    <button onClick={authenticateAdmin}>인증</button>
-                    <button onClick={() => setIsAuthModalOpen(false)}>취소</button>
+                    <div className='auth-button-div'>
+                        <button onClick={authenticateAdmin}>인증</button>
+                        <button onClick={() => setIsAuthModalOpen(false)}>취소</button>
+                    </div>
+
                 </div>
             )}
         </div>
@@ -242,13 +245,13 @@ const styles = `
         display: block;
         margin: 10px 0;
         padding: 10px;
-        width: 100%;
+        width: 280px;
         border: 1px solid #ddd;
         border-radius: 4px; /* 입력 필드 둥글게 */
     }
 
     .auth-modal button {
-        width: 100%; /* 버튼 너비 100% */
+        width: 140px; /* 버튼 너비 100% */
         padding: 10px;
         background-color: #4CAF50;
         color: white;
@@ -261,5 +264,10 @@ const styles = `
 
     .auth-modal button:hover {
         background-color: #45a049; /* 버튼 호버 색상 */
+    }
+
+    .auth-button-div {
+        display: flex;
+        justify-content: space-between;
     }
 `
