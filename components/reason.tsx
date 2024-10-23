@@ -8,14 +8,23 @@ export function Reason() {
   const [whatHappened, setWhatHappened] = useState("");
   const pb = new PocketBase(process.env.NEXT_PUBLIC_POCKETBASE_URL);
 
-  async function updateWhatHappened() { //결석 사유 갱신하는 함수
+  /**
+   * 결석 사유 갱신 함수
+   * 
+   * input으로 입력받은 학생의 이름을 DB에 검색해서
+   * 
+   * 정보를 얻은 다음 밑의 input으로 입력받은 
+   * 
+   * 결석 사유를 위에서 판별한 학생의 결석 사유로 저장함
+   */
+  async function updateWhatHappened() {
     const record = await pb.collection('students').getFirstListItem(`name="${studentName}"`); //입력된 이름에 해당하는 학생의 정보 저장
 
     await pb.collection('students').update(record.id, {
       whatHappened: whatHappened //결석 사유를 입력된 값으로 설정
     });
 
-    setStudentName("") //입력창 공백으로 설정
+    setStudentName("")  //입력창 공백으로 설정
     setWhatHappened("") //입력창 공백으로 설정
     alert('결석 사유가 업데이트 되었습니다. 새로고침을 눌러주세요')
 

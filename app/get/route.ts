@@ -10,7 +10,10 @@ export async function GET(request: Request) { //Get 요청 처리
   try {
     const records = await pb.collection("students").getFullList(); // 모든 레코드 가져오기
     const values = records.map((record) => record[propName!]); // 속성 이름에 해당하는 값들만 배열로 만들기
-    return new Response(JSON.stringify(values), {
+    return new Response(JSON.stringify({
+      "process" : "DB의 모든 학생을 대상으로 해당하는 속성 정보를 추출하였습니다",
+      "result" : values
+    }), {
       headers: {
         "Content-Type": "application/json",
       },

@@ -17,7 +17,7 @@ import PocketBase from 'pocketbase'
  * @returns 2024-10-09 06:30:50 형식
  */
 function dateText() {
-    const date = Date().split(" ")
+    const date = Date().split(" ") //Date()의 반환값(string)을 공백을 기준으로 잘라 순서대로 배열에 저장함
     const dateText = date[3]     //년
         + "-"                    //-
         + monthToNumber(date[1]) //월(숫자)
@@ -37,7 +37,7 @@ function monthToNumber(month: string) {
     return new Date(Date.parse(month + " 1, 2012")).getMonth() + 1
 }
 
-export async function POST(request: Request) { //Post요청 처리
+export async function POST(request: Request) { //Post 요청 처리
     const pb = new PocketBase(process.env.NEXT_PUBLIC_POCKETBASE_URL);
     const res = await request.json(); //요청 본문 받아옴
 

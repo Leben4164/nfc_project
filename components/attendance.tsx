@@ -8,15 +8,25 @@ export function Attendance() {
     const [error, setError] = useState<string | undefined>();
     const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
     const pb = new PocketBase(process.env.NEXT_PUBLIC_POCKETBASE_URL);
-
-    async function refresh() { //새로고침 함수
+        /**
+         * 새로고침 함수
+         * 
+         * DB에서 정보를 가져와 학번을 기준으로 오름차 순으로 정렬함
+         */
+        async function refresh() {
         const response = await pb.collection('students').getList(1, 50, { //students 콜렉션의 모든 정보를 가져옴
             sort: '+studentId', //학번 오름차순으로 정렬
         });
         setItems(response.items);
     }
-
-    async function reset(): Promise<void> { //출석 정보 초기화 함수
+    /**
+     * 출석 정보 초기화 함수
+     * 
+     * 모든 학생의 출석을 false로,
+     * 
+     * 출석 시간을 공백으로 바꾼다
+     */
+    async function reset(): Promise<void> {
         setIsLoading(true); // 초기화 시작 시 로딩 상태 설정
         try {
             for (const item of items) {
