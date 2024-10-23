@@ -7,6 +7,9 @@ export function Attendance() {
     const [items, setItems] = useState<RecordModel[]>([]);
     const [error, setError] = useState<string | undefined>();
     const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
+    const [adminId, setAdminId] = useState(''); // 관리자 아이디 상태 추가
+    const [adminPassword, setAdminPassword] = useState(''); // 관리자 비밀번호 상태 추가
+    const [isAuthModalOpen, setIsAuthModalOpen] = useState(false); // 인증 모달 상태 추가
     const pb = new PocketBase(process.env.NEXT_PUBLIC_POCKETBASE_URL);
         /**
          * 새로고침 함수
@@ -43,6 +46,19 @@ export function Attendance() {
         await refresh();
         setIsLoading(false); // 초기화 완료 후 로딩 상태 해제
     }
+
+    // 관리자 인증 함수
+    const authenticateAdmin = () => {
+        const validAdminId = 'admin'; // 지정된 관리자 아이디
+        const validAdminPassword = '1234'; // 지정된 관리자 비밀번호
+
+        if (adminId === validAdminId && adminPassword === validAdminPassword) {
+            reset(); // 인증 성공 시 초기화 함수 호출
+            setIsAuthModalOpen(false); // 모달 닫기
+        } else {
+            alert('관리자 인증에 실패했습니다. 관리자 이외에는 초기화가 불가능합니다.'); // 인증 실패 알림
+        }
+    };
 
     useEffect(() => {
         // 스타일을 head에 추가
@@ -95,10 +111,29 @@ export function Attendance() {
             )}
             <div className="button-group">
                 <button className="action-button" onClick={refresh} disabled={isLoading}>새로고침</button>
-                <button className={`action-button ${isLoading ? 'loading' : ''}`} onClick={reset} disabled={isLoading}>
-                    {isLoading ? '초기화 중...' : '초기화'}
+                <button className="action-button" onClick={() => setIsAuthModalOpen(true)} disabled={isLoading}>
+                    초기화
                 </button>
             </div>
+            {isAuthModalOpen && (
+                <div className="auth-modal">
+                    <h3>관리자 인증</h3>
+                    <input 
+                        type="text" 
+                        placeholder="아이디" 
+                        value={adminId} 
+                        onChange={(e) => setAdminId(e.target.value)} 
+                    />
+                    <input 
+                        type="password" 
+                        placeholder="비밀번호" 
+                        value={adminPassword} 
+                        onChange={(e) => setAdminPassword(e.target.value)} 
+                    />
+                    <button onClick={authenticateAdmin}>인증</button>
+                    <button onClick={() => setIsAuthModalOpen(false)}>취소</button>
+                </div>
+            )}
         </div>
     )
 }
@@ -149,7 +184,7 @@ const styles = `
     .attendance-status {
         padding: 5px 10px;
         border-radius: 15px;
-    font-weight: bold;
+        font-weight: bold;
     }
 
     .attendance-status.present {
@@ -206,5 +241,22 @@ const styles = `
         background-color: #ccc; /* 로딩 중 버튼 색상 변경 */
         cursor: not-allowed; /* 커서 변경 */
         transition: background-color 0.3s; /* 부드러운 전환 효과 */
+    }
+
+    .auth-modal {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        z-index: 1000;
+    }
+    .auth-modal input {
+        display: block;
+        margin: 10px 0;
+        padding: 10px;
+        width: 100%;
     }
 `
