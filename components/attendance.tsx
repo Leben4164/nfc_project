@@ -55,6 +55,8 @@ export function Attendance() {
         if (adminId === validAdminId && adminPassword === validAdminPassword) {
             reset(); // 인증 성공 시 초기화 함수 호출
             setIsAuthModalOpen(false); // 모달 닫기
+            setAdminId("")
+            setAdminPassword("")
         } else {
             alert('관리자 인증에 실패했습니다. 관리자 이외에는 초기화가 불가능합니다.'); // 인증 실패 알림
         }
@@ -218,45 +220,46 @@ const styles = `
         background-color: #45a049;
     }
 
-    .uid-input-group {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-    }
-
-    .uid-input {
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        width: 200px;
-    }
-
-    .error-message {
-        color: #c62828;
-        text-align: center;
-        margin-bottom: 20px;
-    }
-
-    .action-button.loading {
-        background-color: #ccc; /* 로딩 중 버튼 색상 변경 */
-        cursor: not-allowed; /* 커서 변경 */
-        transition: background-color 0.3s; /* 부드러운 전환 효과 */
-    }
-
     .auth-modal {
         position: fixed;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background-color: white;
+        background-color: #fff;
         padding: 20px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        border-radius: 8px; /* 모서리 둥글게 */
         z-index: 1000;
+        width: 300px; /* 모달 너비 설정 */
     }
+
+    .auth-modal h3 {
+        margin-bottom: 15px; /* 제목과 입력 필드 간격 */
+        text-align: center; /* 제목 중앙 정렬 */
+    }
+
     .auth-modal input {
         display: block;
         margin: 10px 0;
         padding: 10px;
         width: 100%;
+        border: 1px solid #ddd;
+        border-radius: 4px; /* 입력 필드 둥글게 */
+    }
+
+    .auth-modal button {
+        width: 100%; /* 버튼 너비 100% */
+        padding: 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        margin-top: 10px; /* 버튼 간격 */
+    }
+
+    .auth-modal button:hover {
+        background-color: #45a049; /* 버튼 호버 색상 */
     }
 `
