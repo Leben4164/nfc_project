@@ -18,15 +18,20 @@ export function Reason() {
    * 결석 사유를 위에서 판별한 학생의 결석 사유로 저장함
    */
   async function updateWhatHappened() {
-    const record = await pb.collection('students').getFirstListItem(`name="${studentName}"`); //입력된 이름에 해당하는 학생의 정보 저장
+    if (!(studentName === "")) {
+      const record = await pb.collection('students').getFirstListItem(`name="${studentName}"`); //입력된 이름에 해당하는 학생의 정보 저장
 
-    await pb.collection('students').update(record.id, {
-      whatHappened: whatHappened //결석 사유를 입력된 값으로 설정
-    });
-
-    setStudentName("")  //입력창 공백으로 설정
-    setWhatHappened("") //입력창 공백으로 설정
-    alert('결석 사유가 업데이트 되었습니다. 새로고침을 눌러주세요')
+      await pb.collection('students').update(record.id, {
+        whatHappened: whatHappened //결석 사유를 입력된 값으로 설정
+      });
+  
+      setStudentName("")  //입력창 공백으로 설정
+      setWhatHappened("") //입력창 공백으로 설정
+      alert('결석 사유가 업데이트 되었습니다. 새로고침을 눌러주세요')
+    } else {
+      alert('학생 이름을 입력해주세요.')
+    }
+    
 
   }
 

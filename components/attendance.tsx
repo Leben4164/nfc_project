@@ -57,6 +57,7 @@ export function Attendance() {
             setIsAuthModalOpen(false); // 모달 닫기
             setAdminId("")
             setAdminPassword("")
+            alert('관리자 인증에 성공했습니다. 초기화를 진행합니다.')
         } else {
             alert('관리자 인증에 실패했습니다. 관리자 이외에는 초기화가 불가능합니다.'); // 인증 실패 알림
         }
@@ -112,8 +113,8 @@ export function Attendance() {
                 </table>
             )}
             <div className="button-group">
-                <button className="action-button" onClick={refresh} disabled={isLoading}>새로고침</button>
-                <button className="action-button" onClick={() => setIsAuthModalOpen(true)} disabled={isLoading}>
+                <button className="action-button" onClick={refresh} disabled={isLoading || isAuthModalOpen}>새로고침</button>
+                <button className="action-button" onClick={() => setIsAuthModalOpen(true)} disabled={isLoading || isAuthModalOpen}>
                     초기화
                 </button>
             </div>
