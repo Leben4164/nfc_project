@@ -7,7 +7,6 @@ export function Attendance() {
     const [items, setItems] = useState<RecordModel[]>([]);
     const [error, setError] = useState<string | undefined>();
     const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
-    const [adminId, setAdminId] = useState(''); // 관리자 아이디 상태 추가
     const [adminPassword, setAdminPassword] = useState(''); // 관리자 비밀번호 상태 추가
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false); // 인증 모달 상태 추가
     const pb = new PocketBase(process.env.NEXT_PUBLIC_POCKETBASE_URL);
@@ -52,10 +51,9 @@ export function Attendance() {
         const validAdminId = 'admin'; // 지정된 관리자 아이디
         const validAdminPassword = '1234'; // 지정된 관리자 비밀번호
 
-        if (adminId === validAdminId && adminPassword === validAdminPassword) {
+        if (adminPassword === validAdminPassword) {
             reset(); // 인증 성공 시 초기화 함수 호출
             setIsAuthModalOpen(false); // 모달 닫기
-            setAdminId("")
             setAdminPassword("")
             alert('관리자 인증에 성공했습니다. 초기화를 진행합니다.')
         } else {
@@ -121,12 +119,6 @@ export function Attendance() {
             {isAuthModalOpen && (
                 <div className="auth-modal">
                     <h3>관리자 인증</h3>
-                    <input
-                        type="text"
-                        placeholder="아이디"
-                        value={adminId}
-                        onChange={(e) => setAdminId(e.target.value)}
-                    />
                     <input
                         type="password"
                         placeholder="비밀번호"
