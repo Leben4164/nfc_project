@@ -48,9 +48,7 @@ export function Attendance() {
 
     // 관리자 인증 함수
     const authenticateAdmin = () => {
-        const validAdminId = 'admin'; // 지정된 관리자 아이디
         const validAdminPassword = '1234'; // 지정된 관리자 비밀번호
-
         if (adminPassword === validAdminPassword) {
             reset(); // 인증 성공 시 초기화 함수 호출
             setIsAuthModalOpen(false); // 모달 닫기

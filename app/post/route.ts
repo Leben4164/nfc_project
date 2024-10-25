@@ -79,5 +79,6 @@ export async function POST(request: Request) { //Post 요청 처리
         }
     } catch (error) {
         console.error(error);
+        
     }
 }
