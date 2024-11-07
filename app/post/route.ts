@@ -49,15 +49,12 @@ export async function POST(request: Request) { //Post 요청 처리
                     attendance: true,          //출석을 true로 바꾸고
                     attendanceTime: dateText() //요청을 보냈을 때 시간으로 출석 시간을 설정함
                 });
-    
+
                 return new Response(JSON.stringify({
-                    "process": "해당 UID에 해당하는 학생의 출석현황을 갱신하는데 성공했습니다",
+                    "process": "학생 출석현황 갱신 성공",
                     "student_name": record.name,
                     "student_number": record.studentId,
                     "uid": record.uid,
-                    "attendence": record.attendence,
-                    "attendence_time": record.attendenceTime,
-                    "what_happened": record.whatHappened,
                 }), {
                     headers: {
                         "Content-Type": "application/json",
@@ -66,7 +63,7 @@ export async function POST(request: Request) { //Post 요청 처리
                 });
             } else { //attendance === true
                 return new Response(JSON.stringify({
-                    "process" : "해당 UID에 해당하는 학생은 이미 출석했습니다."
+                    "process": "해당 UID에 해당하는 학생은 이미 출석했습니다."
                 }), {
                     headers: {
                         "Content-Type": "application/json",
@@ -74,11 +71,11 @@ export async function POST(request: Request) { //Post 요청 처리
                     status: 201,
                 })
             }
-            
+
 
         }
     } catch (error) {
         console.error(error);
-        
+
     }
 }
