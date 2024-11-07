@@ -51,10 +51,7 @@ export async function POST(request: Request) { //Post 요청 처리
                 });
 
                 return new Response(JSON.stringify({
-                    "process": "학생 출석현황 갱신 성공",
-                    "student_name": record.name,
-                    "student_number": record.studentId,
-                    "uid": record.uid,
+                    "^": record.studentId,
                 }), {
                     headers: {
                         "Content-Type": "application/json",
