@@ -17,10 +17,13 @@ import PocketBase from 'pocketbase'
  */
 function dateText() {
     const date = new Date(); // 현재 날짜 객체 생성
-    const year = date.getFullYear(); // 년도
-    const month = monthToNumber(date.toLocaleString('default', { month: 'long' })); // 월(문자 -> 숫자)
-    const day = String(date.getDate()).padStart(2, '0'); // 일
-    const time = date.toTimeString().split(" ")[0]; // 시간(00:00:00)
+    const utcOffset = 9 * 60; // 한국은 UTC+9
+    const localDate = new Date(date.getTime() + utcOffset * 60 * 1000); // UTC 시간을 한국 시간으로 변환
+
+    const year = localDate.getFullYear(); // 년도
+    const month = monthToNumber(localDate.toLocaleString('default', { month: 'long' })); // 월(문자 -> 숫자)
+    const day = String(localDate.getDate()).padStart(2, '0'); // 일
+    const time = localDate.toTimeString().split(" ")[0]; // 시간(00:00:00)
 
     const dateText = `${year}-${month}-${day} ${time}`; // 형식에 맞춰 문자열 생성
     return dateText;
