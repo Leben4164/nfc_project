@@ -1,4 +1,3 @@
-
 import PocketBase from 'pocketbase'
 
 /**
@@ -17,15 +16,14 @@ import PocketBase from 'pocketbase'
  * @returns 2024-10-09 06:30:50 형식
  */
 function dateText() {
-    const date = Date().split(" ") //Date()의 반환값(string)을 공백을 기준으로 잘라 순서대로 배열에 저장함
-    const dateText = date[3]     //년
-        + "-"                    //-
-        + monthToNumber(date[1]) //월(숫자)
-        + "-"                    //-
-        + date[2]                //일
-        + " "                    //공백
-        + date[4]                //시간(00:00:00)
-    return dateText
+    const date = new Date(); // 현재 날짜 객체 생성
+    const year = date.getFullYear(); // 년도
+    const month = monthToNumber(date.toLocaleString('default', { month: 'long' })); // 월(문자 -> 숫자)
+    const day = String(date.getDate()).padStart(2, '0'); // 일
+    const time = date.toTimeString().split(" ")[0]; // 시간(00:00:00)
+
+    const dateText = `${year}-${month}-${day} ${time}`; // 형식에 맞춰 문자열 생성
+    return dateText;
 }
 
 /**
