@@ -1,12 +1,13 @@
 'use client' //client component 선언
 
 import React, { useState, useEffect } from 'react';
-import PocketBase from 'pocketbase';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 export function Reason() {
   const [studentName, setStudentName] = useState("");
   const [whatHappened, setWhatHappened] = useState("");
-  const pb = new PocketBase(process.env.NEXT_PUBLIC_POCKETBASE_URL);
 
   /**
    * 결석 사유 갱신 함수
@@ -17,22 +18,34 @@ export function Reason() {
    * 
    * 결석 사유를 위에서 판별한 학생의 결석 사유로 저장함
    */
-  async function updateWhatHappened() {
+  const updateWhatHappened = async () => {
     if (!(studentName === "")) {
-      const record = await pb.collection('students').getFirstListItem(`name="${studentName}"`); //입력된 이름에 해당하는 학생의 정보 저장
+      try {
+        const response = await fetch('../happen', {
+          method: 'POST', // POST 요청으로 설정
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ studentName, whatHappened }), // 학생 이름과 결석 사유를 JSON 형식으로 변환
+        });
 
-      await pb.collection('students').update(record.id, {
-        whatHappened: whatHappened //결석 사유를 입력된 값으로 설정
-      });
-  
-      setStudentName("")  //입력창 공백으로 설정
-      setWhatHappened("") //입력창 공백으로 설정
-      alert('결석 사유가 업데이트 되었습니다. 새로고침을 눌러주세요')
+        if (!response.ok) {
+          throw new Error('결석 사유 업데이트에 실패했습니다.');
+        }
+
+        const result = await response.json();
+        alert(result.message); // 성공 메시지 표시
+
+        // 입력창 공백으로 설정
+        setStudentName("");
+        setWhatHappened("");
+      } catch (error) {
+        console.error('결석 사유 업데이트 오류:', error);
+        alert('결석 사유 업데이트 중 오류가 발생했습니다.');
+      }
     } else {
-      alert('학생 이름을 입력해주세요.')
+      alert('학생 이름을 입력해주세요.');
     }
-    
-
   }
 
   useEffect(() => {
@@ -71,7 +84,6 @@ export function Reason() {
 
 const styles = `
   .reason-container {
-      position:
       font-family: Arial, sans-serif;
       max-width: 500px;
       margin: 0 auto;
@@ -87,7 +99,7 @@ const styles = `
   .input-group {
       display: flex;
       flex-direction: column;
-        gap: 10px;
+      gap: 10px;
       align-items: center;
   }
 
@@ -111,4 +123,4 @@ const styles = `
   .action-button:hover {
       background-color: #45a049;
   }
-`
+`;

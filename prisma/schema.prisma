@@ -1,0 +1,18 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Student {
+  id             Int      @id @default(autoincrement())
+  name           String //학생 이름
+  studentId      String //학번
+  uid            String   @unique 
+  attendance     Boolean  @default(false) //출석 여부
+  whatHappened   String? //결석 사유
+  attendanceTime String? //출석 일자
+}
