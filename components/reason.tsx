@@ -1,9 +1,6 @@
 'use client' //client component 선언
 
 import React, { useState, useEffect } from 'react';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
 
 export function Reason() {
   const [studentName, setStudentName] = useState("");
