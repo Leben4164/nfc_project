@@ -1,7 +1,7 @@
 "use client" // client component 선언
 
 import { useState, useEffect } from 'react';
-import { PrismaClient, Student } from '@prisma/client';
+import { Student } from '@prisma/client';
 import '../styles/attendance.css';
 
 export function Attendance() {
@@ -19,7 +19,7 @@ export function Attendance() {
     async function refresh() {
         setIsLoading(true);
         try {
-            const response = await fetch('../refresh'); // API 엔드포인트로 요청
+            const response = await fetch('../api/refresh'); // API 엔드포인트로 요청
             if (!response.ok) {
                 throw new Error('학생 정보를 가져오는 데 실패했습니다.');
             }
@@ -43,7 +43,7 @@ export function Attendance() {
     async function reset(): Promise<void> {
         setIsLoading(true);
         try {
-           const response = await fetch('../reset', {
+           const response = await fetch('../api/reset', {
             method: 'POST',
             headers: {
                 'Content-Type' : 'application/json',

@@ -18,7 +18,7 @@ export function Reason() {
   const updateWhatHappened = async () => {
     if (!(studentName === "")) {
       try {
-        const response = await fetch('../happen', {
+        const response = await fetch('../api/happen', {
           method: 'POST', // POST 요청으로 설정
           headers: {
             'Content-Type': 'application/json',
