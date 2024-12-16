@@ -1,11 +1,10 @@
 "use client" // client component 선언
 
 import { useState, useEffect } from 'react';
-import { Student } from '@prisma/client';
 import '../styles/attendance.css';
 
 export function Attendance() {
-    const [items, setItems] = useState<Student[]>([]);
+    const [items, setItems] = useState<{ id: number; studentId: string; name: string; attendance: boolean; attendanceTime?: string; whatHappened?: string; }[]>([]);
     const [error, setError] = useState<string | undefined>();
     const [isLoading, setIsLoading] = useState(false);
     const [adminPassword, setAdminPassword] = useState('');
