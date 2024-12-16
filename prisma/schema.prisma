@@ -14,7 +14,7 @@ model Students {
   id             Int     @id @default(autoincrement())
   name           String  @unique
   studentId      String
-  uid            String
+  uid            String   @unique
   attendance     Boolean
   attendanceTime String?
   whatHappened   String?

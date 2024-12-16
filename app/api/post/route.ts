@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '../../../prisma/student.db'; // 프리즈마 클라이언트 임포트
+import { prisma } from '../../../lib/prisma';
 
 /**
  * 현재 날짜 및 시간을 문자로 정리해주는 함수
@@ -24,17 +24,17 @@ export async function POST(request: Request) {
     const { uid } = await request.json(); // 요청 본문에서 uid 가져오기
 
     try {
-        const student = await prisma.student.findUnique({ // 프리즈마를 사용하여 학생 찾기
+        const student = await prisma.students.findUnique({ // 프리즈마를 사용하여 학생 찾기
             where: { uid },
         });
         if (!student) {
             return NextResponse.json({ message: '해당 UID에 해당하는 학생을 찾을 수 없습니다.' }, { status: 404 });
         }
 
-        await prisma.student.update({ // 프리즈마를 사용하여 출석 정보 업데이트
+        await prisma.students.update({ // 프리즈마를 사용하여 출석 정보 업데이트
             where: { uid },
             data: {
-                attendance: 1,
+                attendance: true,
                 attendanceTime: dateText(),
             },
         });
