@@ -1,33 +1,29 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import fs from 'fs';
+import path from 'path';
 
-const prisma = new PrismaClient();
+const dataFilePath = path.join(process.cwd(), 'data.json');
 
 // POST 요청 처리: 결석 사유 업데이트
 export async function POST(request: Request) {
-    const { studentName, whatHappened } = await request.json();
-
-    if (!studentName || !whatHappened) {
-        return NextResponse.json({ message: '학생 이름과 결석 사유를 입력해야 합니다.' }, { status: 400 });
-    }
+    const { studentName, whatHappened } = await request.json(); // 요청 본문에서 학생 이름과 결석 사유 가져오기
 
     try {
-        const student = await prisma.student.findUnique({
-            where: { uid: studentName } // uid를 사용하여 학생의 정보 저장
-        });
+        const dataBuffer = fs.readFileSync(dataFilePath);
+        const dataJSON = dataBuffer.toString();
+        const students = JSON.parse(dataJSON);
 
-        if (student) {
-            await prisma.student.update({
-                where: { id: student.id },
-                data: {
-                    whatHappened: whatHappened // 결석 사유를 입력된 값으로 설정
-                }
-            });
-
-            return NextResponse.json({ message: '결석 사유가 업데이트 되었습니다.' }); // 성공 메시지 반환
-        } else {
+        // 학생 이름에 해당하는 학생 찾기
+        const studentIndex = students.findIndex((student: { name: any; }) => student.name === studentName);
+        if (studentIndex === -1) {
             return NextResponse.json({ message: '해당 이름의 학생을 찾을 수 없습니다.' }, { status: 404 });
         }
+
+        // 결석 사유 업데이트
+        students[studentIndex].whatHappened = whatHappened; // 결석 사유 업데이트
+
+        fs.writeFileSync(dataFilePath, JSON.stringify(students, null, 2)); // JSON 파일에 저장
+        return NextResponse.json({ message: '결석 사유가 업데이트 되었습니다.', student: students[studentIndex] }); // 성공 메시지와 업데이트된 학생 정보 반환
     } catch (error) {
         console.error('Error updating what happened:', error);
         return NextResponse.error(); // 오류 발생 시 에러 응답
