@@ -32,7 +32,7 @@ export async function POST(request: Request) {
         const students = JSON.parse(dataJSON);
 
         // uid에 해당하는 학생 찾기
-        const studentIndex = students.findIndex((student: { studentId: any; }) => student.studentId === uid);
+        const studentIndex = students.findIndex((student: { uid: string; }) => student.uid === uid);
         if (studentIndex === -1) {
             return NextResponse.json({ message: '해당 UID에 해당하는 학생을 찾을 수 없습니다.' }, { status: 404 });
         }
