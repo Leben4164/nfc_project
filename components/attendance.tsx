@@ -16,10 +16,10 @@ export function Attendance() {
      * 
      * DB에서 정보를 가져와 학번을 기준으로 오름차 순으로 정렬함
      */
-    async function refresh() {
+    const fetchStudents = async () => {
         setIsLoading(true);
         try {
-            const response = await fetch('../api/refresh'); // API 엔드포인트로 요청
+            const response = await fetch('/api/refresh'); // API 호출
             if (!response.ok) {
                 throw new Error('학생 정보를 가져오는 데 실패했습니다.');
             }
@@ -31,7 +31,7 @@ export function Attendance() {
         } finally {
             setIsLoading(false);
         }
-    }
+    };
 
     /**
      * 출석 정보 초기화 함수
@@ -40,33 +40,31 @@ export function Attendance() {
      * 
      * 출석 시간을 공백으로 바꾼다
      */
-    async function reset(): Promise<void> {
+    const resetAttendance = async () => {
         setIsLoading(true);
         try {
-           const response = await fetch('../api/reset', {
-            method: 'POST',
-            headers: {
-                'Content-Type' : 'application/json',
-            },
-           })
-           if (!response.ok) {
-            throw new Error('출석 초기화에 실패했습니다.')
-           }
-            alert('출석을 초기화하는데 성공했습니다.');
+            const response = await fetch('/api/reset', {
+                method: 'POST', // POST 요청으로 초기화
+            });
+            if (!response.ok) {
+                throw new Error('출석 초기화에 실패했습니다.');
+            }
+            const updatedStudents = await response.json();
+            setItems(updatedStudents); // 초기화된 학생 목록으로 상태 업데이트
+            alert("출석을 초기화했습니다.")
         } catch (error) {
-            console.error('출석 초기화 오류:', error);
+            console.error('Error resetting attendance:', error);
             setError('출석을 초기화하는 중 오류가 발생했습니다.');
         } finally {
-            await refresh();
             setIsLoading(false);
         }
-    }
+    };
 
     // 관리자 인증 함수
     const authenticateAdmin = () => {
         const validAdminPassword = '1234'; // 지정된 관리자 비밀번호
         if (adminPassword === validAdminPassword) {
-            reset(); // 인증 성공 시 초기화 함수 호출
+            resetAttendance(); // 인증 성공 시 초기화 함수 호출
             setIsAuthModalOpen(false); // 모달 닫기
             setAdminPassword("");
             alert('관리자 인증에 성공했습니다. 초기화를 진행합니다.');
@@ -76,10 +74,7 @@ export function Attendance() {
     };
 
     useEffect(() => {
-        refresh().catch((error) => {
-            console.error('Error fetching students:', error);
-            setError('학생 정보를 가져오는 중 오류가 발생했습니다.');
-        });
+        fetchStudents(); // 컴포넌트가 마운트될 때 학생 목록 가져오기
     }, []);
 
     return (
@@ -120,7 +115,7 @@ export function Attendance() {
                 </table>
             )}
             <div className="button-group">
-                <button className="action-button" onClick={refresh} disabled={isLoading || isAuthModalOpen}>새로고침</button>
+                <button className="action-button" onClick={fetchStudents} disabled={isLoading || isAuthModalOpen}>새로고침</button>
                 <button className="action-button" onClick={() => setIsAuthModalOpen(true)} disabled={isLoading || isAuthModalOpen}>
                     초기화
                 </button>
