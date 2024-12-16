@@ -1,8 +1,5 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-
-const dataFilePath = path.join(process.cwd(), 'data.json');
+import { prisma } from '../../../prisma/student.db'; // 프리즈마 클라이언트 임포트
 
 /**
  * 현재 날짜 및 시간을 문자로 정리해주는 함수
@@ -27,22 +24,21 @@ export async function POST(request: Request) {
     const { uid } = await request.json(); // 요청 본문에서 uid 가져오기
 
     try {
-        const dataBuffer = fs.readFileSync(dataFilePath);
-        const dataJSON = dataBuffer.toString();
-        const students = JSON.parse(dataJSON);
-
-        // uid에 해당하는 학생 찾기
-        const studentIndex = students.findIndex((student: { uid: string; }) => student.uid === uid);
-        if (studentIndex === -1) {
+        const student = await prisma.student.findUnique({ // 프리즈마를 사용하여 학생 찾기
+            where: { uid },
+        });
+        if (!student) {
             return NextResponse.json({ message: '해당 UID에 해당하는 학생을 찾을 수 없습니다.' }, { status: 404 });
         }
 
-        // 출석 여부 업데이트
-        students[studentIndex].attendance = true;
-        students[studentIndex].attendanceTime = dateText(); // 출석 시간 설정
-
-        fs.writeFileSync(dataFilePath, JSON.stringify(students, null, 2)); // JSON 파일에 저장
-        return NextResponse.json(students[studentIndex]); // 업데이트된 학생 정보 반환
+        await prisma.student.update({ // 프리즈마를 사용하여 출석 정보 업데이트
+            where: { uid },
+            data: {
+                attendance: 1,
+                attendanceTime: dateText(),
+            },
+        });
+        return NextResponse.json(student); // 업데이트된 학생 정보 반환
     } catch (error) {
         console.error('Error updating attendance:', error);
         return NextResponse.error(); // 오류 발생 시 에러 응답

@@ -1,28 +1,20 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import { prisma } from '../../../lib/prisma'; // 프리즈마 클라이언트 임포트
 
-const dataFilePath = path.join(process.cwd(), 'data.json');
-
-// POST 요청 처리: 모든 학생의 출석 초기화
 export async function POST() {
     try {
-        const dataBuffer = fs.readFileSync(dataFilePath);
-        const dataJSON = dataBuffer.toString();
-        const students = JSON.parse(dataJSON);
-
-        // 모든 학생의 출석 여부를 false로 설정
-        const updatedStudents = students.map((student: any) => ({
-            ...student,
-            attendance: false,
-            attendanceTime: null,
-            whatHappened: ''
-        }));
-
-        fs.writeFileSync(dataFilePath, JSON.stringify(updatedStudents, null, 2)); // JSON 파일에 저장
+        // 모든 학생의 출석 초기화
+        await prisma.students.updateMany({ // 프리즈마를 사용하여 모든 학생의 출석 초기화
+            data: {
+                attendance: false,
+                attendanceTime: undefined,
+                whatHappened: '',
+            },
+        });
+        const updatedStudents = await prisma.students.findMany(); // 초기화된 학생 정보 가져오기
         return NextResponse.json(updatedStudents); // 초기화된 학생 정보 반환
     } catch (error) {
         console.error('Error resetting attendance:', error);
-        return NextResponse.error(); // 오류 발생 시 에러 응답
+        return NextResponse.error();
     }
 }

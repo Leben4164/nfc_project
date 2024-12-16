@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import '../styles/attendance.css';
 
 export function Attendance() {
-    const [items, setItems] = useState<{ id: number; studentId: string; name: string; attendance: boolean; attendanceTime?: string; whatHappened?: string; }[]>([]);
+    const [items, setItems] = useState<{ id: number; studentId: string; name: string; attendance: number; attendanceTime?: string; whatHappened?: string; }[]>([]);
     const [error, setError] = useState<string | undefined>();
     const [isLoading, setIsLoading] = useState(false);
     const [adminPassword, setAdminPassword] = useState('');
@@ -24,6 +24,7 @@ export function Attendance() {
             }
             const data = await response.json();
             setItems(data); // 가져온 데이터를 상태에 저장
+            console.log(data)
         } catch (error) {
             console.error('Error fetching students:', error);
             setError('학생 정보를 가져오는 중 오류가 발생했습니다.');

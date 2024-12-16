@@ -1,66 +1,48 @@
 'use client' //client component 선언
 
-import React, { useState, useEffect } from 'react';
-import fs from 'fs';
-import path from 'path';
-
-const dataFilePath = path.join(process.cwd(), 'data.json');
-
-// JSON 파일에서 데이터 읽기
-const readData = () => {
-    try {
-        const dataBuffer = fs.readFileSync(dataFilePath);
-        const dataJSON = dataBuffer.toString();
-        return JSON.parse(dataJSON);
-    } catch (error) {
-        console.error('Error reading data:', error);
-        return [];
-    }
-};
-
-// JSON 파일에 데이터 쓰기
-const writeData = (data: any) => {
-    try {
-        fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2)); // JSON 파일에 저장
-    } catch (error) {
-        console.error('Error writing data:', error);
-    }
-};
+import React, { useState } from 'react';
 
 export function Reason() {
-  const [studentName, setStudentName] = useState("");
-  const [whatHappened, setWhatHappened] = useState("");
+    const [studentName, setStudentName] = useState("");
+    const [whatHappened, setWhatHappened] = useState("");
 
     /**
-   * 결석 사유 갱신 함수
-   * 
-   * input으로 입력받은 학생의 이름을 DB에 검색해서
-   * 
-   * 정보를 얻은 다음 밑의 input으로 입력받은 
-   * 
-   * 결석 사유를 위에서 판별한 학생의 결석 사유로 저장함
-   */
+     * 결석 사유 갱신 함수
+     * 
+     * input으로 입력받은 학생의 이름을 DB에 검색해서
+     * 
+     * 정보를 얻은 다음 밑의 input으로 입력받은 
+     * 
+     * 결석 사유를 위에서 판별한 학생의 결석 사유로 저장함
+     */
     const updateWhatHappened = async () => {
         if (studentName === "") {
             alert('학생 이름을 입력해주세요.');
             return;
         }
 
-        const students = readData(); // JSON 파일에서 학생 데이터 읽기
-        const studentIndex = students.findIndex((student: { name: string; }) => student.name === studentName);
+        try {
+            const response = await fetch('/api/happen', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ studentName, whatHappened }),
+            });
 
-        if (studentIndex === -1) {
-            alert('해당 이름의 학생을 찾을 수 없습니다.');
-            return;
+            const data = await response.json();
+            if (!response.ok) {
+                alert(data.message);
+                return;
+            }
+
+            alert(data.message);
+            setStudentName(""); // 입력 필드 초기화
+            setWhatHappened(""); // 입력 필드 초기화
+        } catch (error) {
+            console.error('Error updating what happened:', error);
+            alert('결석 사유 업데이트 중 오류가 발생했습니다.');
         }
-
-        // 결석 사유 업데이트
-        students[studentIndex].whatHappened = whatHappened; // 결석 사유 업데이트
-        writeData(students); // JSON 파일에 저장
-
-        alert('결석 사유가 업데이트 되었습니다.'); // 성공 메시지 표시
-        setStudentName(""); // 입력 필드 초기화
-        setWhatHappened(""); // 입력 필드 초기화
     };
 
     return (
