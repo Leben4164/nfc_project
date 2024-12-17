@@ -4,10 +4,6 @@ import { initialStudents } from '../../../data/students';
 // 서버 사이드에서 공유할 수 있는 상태 저장소
 let globalStudents = initialStudents;
 
-export function updateGlobalStudents(newStudents: Student[]) {
-    globalStudents = newStudents;
-}
-
 export async function POST(request: Request) {
     const { uid } = await request.json();
 
