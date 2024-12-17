@@ -1,47 +1,22 @@
 'use client' //client component 선언
 
 import React, { useState } from 'react';
+import { updateWhatHappened } from '../lib/github-db'; // github-db.ts에서 결석 사유 업데이트 함수 임포트
 
-export function Reason() {
+interface ReasonProps {
+    students: Student[];
+    onUpdateReason: (name: string, reason: string) => void;
+}
+
+export function Reason({ students, onUpdateReason }: ReasonProps) {
     const [studentName, setStudentName] = useState("");
     const [whatHappened, setWhatHappened] = useState("");
 
-    /**
-     * 결석 사유 갱신 함수
-     * 
-     * input으로 입력받은 학생의 이름을 DB에 검색해서
-     * 
-     * 정보를 얻은 다음 밑의 input으로 입력받은 
-     * 
-     * 결석 사유를 위에서 판별한 학생의 결석 사유로 저장함
-     */
-    const updateWhatHappened = async () => {
-        if (studentName === "") {
-            alert('학생 이름을 입력해주세요.');
-            return;
-        }
-
-        try {
-            const response = await fetch('/api/happen', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ studentName, whatHappened }),
-            });
-
-            const data = await response.json();
-            if (!response.ok) {
-                alert(data.message);
-                return;
-            }
-
-            alert(data.message);
-            setStudentName(""); // 입력 필드 초기화
-            setWhatHappened(""); // 입력 필드 초기화
-        } catch (error) {
-            console.error('Error updating what happened:', error);
-            alert('결석 사유 업데이트 중 오류가 발생했습니다.');
+    const handleSubmit = () => {
+        if (studentName && whatHappened) {
+            onUpdateReason(studentName, whatHappened);
+            setStudentName("");
+            setWhatHappened("");
         }
     };
 
@@ -63,7 +38,7 @@ export function Reason() {
                     onChange={(e) => setWhatHappened(e.target.value)}
                     className="uid-input"
                 />
-                <button onClick={updateWhatHappened} className="action-button">제출</button>
+                <button onClick={handleSubmit} className="action-button">제출</button>
             </div>
         </div>
     );

@@ -1,46 +1,30 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '../../../lib/prisma';
+import { initialStudents } from '../../../data/students';
 
-/**
- * 현재 날짜 및 시간을 문자로 정리해주는 함수
- * 
- * @returns 2024-10-09 06:30:50 형식
- */
-function dateText() {
-    const date = new Date(); // 현재 날짜 객체 생성
-    const utcOffset = 9 * 60; // 한국은 UTC+9
-    const localDate = new Date(date.getTime() + utcOffset * 60 * 1000); // UTC 시간을 한국 시간으로 변환
+// 서버 사이드에서 공유할 수 있는 상태 저장소
+let globalStudents = initialStudents;
 
-    const year = localDate.getFullYear(); //년도
-    const month = String(localDate.getMonth() + 1).padStart(2, '0'); // 월을 2자리로
-    const day = String(localDate.getDate()).padStart(2, '0'); //일
-    const time = localDate.toTimeString().split(" ")[0]; // 시간(00:00:00)
+export function updateGlobalStudents(newStudents: Student[]) {
+    globalStudents = newStudents;
+}
 
-    return `${year}-${month}-${day} ${time}`; // 형식에 맞춰 문자열 생성
-};
-
-// POST 요청 처리: 출석 여부 업데이트
 export async function POST(request: Request) {
-    const { uid } = await request.json(); // 요청 본문에서 uid 가져오기
+    const { uid } = await request.json();
 
     try {
-        const student = await prisma.students.findUnique({ // 프리즈마를 사용하여 학생 찾기
-            where: { uid },
-        });
+        // 전역 상태에서 학생 찾기
+        const student = globalStudents.find(s => s.uid === uid);
         if (!student) {
-            return NextResponse.json({ message: '해당 UID에 해당하는 학생을 찾을 수 없습니다.' }, { status: 404 });
+            return NextResponse.json({ message: '학생을 찾을 수 없습니다.' }, { status: 404 });
         }
 
-        await prisma.students.update({ // 프리즈마를 사용하여 출석 정보 업데이트
-            where: { uid },
-            data: {
-                attendance: true,
-                attendanceTime: dateText(),
-            },
-        });
-        return NextResponse.json(student); // 업데이트된 학생 정보 반환
+        // 학생 출석 상태 업데이트
+        student.attendance = true;
+        student.attendanceTime = new Date().toISOString();
+
+        return NextResponse.json(student);
     } catch (error) {
-        console.error('Error updating attendance:', error);
-        return NextResponse.error(); // 오류 발생 시 에러 응답
+        console.error('Error:', error);
+        return NextResponse.json({ error: '출석 처리 중 오류가 발생했습니다.' }, { status: 500 });
     }
 }
