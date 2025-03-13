@@ -18,7 +18,10 @@ interface AttendanceProps {
     onAttendance: (uid: string) => void;
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> e256a626f414500e07a7dc762f9c9edaf757eacb
 export function Attendance({ students, onAttendance }: AttendanceProps) {
     const [uid, setUid] = useState("");
 
