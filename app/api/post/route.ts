@@ -35,7 +35,7 @@ export async function POST(request: Request) {
     const supabase = createClient<Database>(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_KEY!)
 
     try {
-        supabase.from('students').update({
+        const { error } = await supabase.from('students').update({
             attendance: true,
             attendance_time: dateText()
         }).eq('uid', uid)
