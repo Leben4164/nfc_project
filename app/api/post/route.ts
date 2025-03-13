@@ -7,7 +7,7 @@ export async function POST(request: Request) {
     const supabase = createClient<Database>(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_KEY!)
 
     try {
-        const { data } = await supabase.from('students').select('uid', uid)
+        const { data } = await supabase.from('students').select().eq('uid', uid).single()
         return NextResponse.json(data);
     } catch (error) {
         console.error('Error:', error);
