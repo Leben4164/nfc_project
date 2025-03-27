@@ -1,12 +1,13 @@
 'use client' //client component 선언
 
 import React, { useState, useEffect } from 'react';
-import PocketBase from 'pocketbase';
+import { createClient } from '@supabase/supabase-js';
+import { Database } from '@/supabase';
 
 export function Reason() {
   const [studentName, setStudentName] = useState("");
   const [whatHappened, setWhatHappened] = useState("");
-  const pb = new PocketBase(process.env.NEXT_PUBLIC_POCKETBASE_URL);
+  const supabase = createClient<Database>(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_KEY!)
 
   /**
    * 결석 사유 갱신 함수
@@ -19,19 +20,17 @@ export function Reason() {
    */
   async function updateWhatHappened() {
     if (!(studentName === "")) {
-      const record = await pb.collection('students').getFirstListItem(`name="${studentName}"`); //입력된 이름에 해당하는 학생의 정보 저장
+      const { error } = await supabase.from('students').update({
+        what_happen: whatHappened,
+      }).eq('name', studentName)
 
-      await pb.collection('students').update(record.id, {
-        whatHappened: whatHappened //결석 사유를 입력된 값으로 설정
-      });
-  
       setStudentName("")  //입력창 공백으로 설정
       setWhatHappened("") //입력창 공백으로 설정
       alert('결석 사유가 업데이트 되었습니다. 새로고침을 눌러주세요')
     } else {
       alert('학생 이름을 입력해주세요.')
     }
-    
+
 
   }
 
