@@ -43,12 +43,13 @@ export function Attendance() {
         setIsLoading(true); // 초기화 시작 시 로딩 상태 설정
         try {
             // attendance가 true인 데이터만 업데이트
-            const { data } = await supabase.from('students').select('id').eq('attendance', true);
+            const { data } = await supabase.from('students').select();
             if (data) {
                 for (const student of data) {
-                    await supabase.from('students').update({
+                    const { error } = await supabase.from('students').update({
                         attendance: false,
                         attendance_time: "",
+                        what_happen: "",
                     }).eq('id', student.id);
                 }
             }
