@@ -35,36 +35,32 @@ export async function POST(request: Request) {
     const supabase = createClient<Database>(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_KEY!)
 
     try {
-        const { error } = await supabase.from('students').update({
-            attendance: true,
-            attendance_time: dateText()
-        }).eq('uid', uid)
         const { data: existingData, error: checkError } = await supabase
             .from('students')
             .select('attendance, student_id')
             .eq('uid', uid)
             .single(); // 단일 객체로 반환
+        
+        const { error } = await supabase.from('students').update({
+            attendance: true,
+            attendance_time: dateText()
+        }).eq('uid', uid)
 
         if (checkError) {
             throw checkError;
         };
 
-        return new Response(String(existingData.attendance), {
+        if (existingData.attendance) {
+            return new Response("^^^^^", {
+                status: 200,
+                headers: { 'Content-Type': 'text/plain' },
+            });
+        }
+        return new Response("^"+String(existingData.student_id), {
             status: 200,
             headers: { 'Content-Type': 'text/plain' },
         });
-
-        // if (existingData.attendance) {
-        //     return new Response("^^^^^", {
-        //         status: 200,
-        //         headers: { 'Content-Type': 'text/plain' },
-        //     });
-        // }
-        // return new Response("^"+String(existingData.student_id), {
-        //     status: 200,
-        //     headers: { 'Content-Type': 'text/plain' },
-        // });
-        //return NextResponse.json({ result: "sucwwwss" }, { status: 200 });
+        return NextResponse.json({ result: "sucwwwss" }, { status: 200 });
     } catch (error) {
         console.error('Error:', error);
         return NextResponse.json({ error: '출석 처리 중 오류가 발생했습니다.' }, { status: 500 });
