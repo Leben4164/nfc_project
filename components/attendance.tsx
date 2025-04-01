@@ -114,10 +114,10 @@ export function Attendance() {
                                     </span>
                                 </td>
                                 <td className="centered-cell">
-                                    {student.attendance_time ? student.attendance_time.split('.')[0] : '-'}
+                                    {student.attendance_time ? student.attendance_time.split('.')[0] : ''}
                                 </td>
                                 <td className="centered-cell">
-                                    {student.attendance ? '-' : student.what_happen}
+                                    {student.attendance ? '' : student.what_happen}
                                 </td>
                             </tr>
                         ))}
