@@ -50,7 +50,7 @@ export async function POST(request: Request) {
         };
 
         if (existingData.attendance):
-            return new Response("^0000", {
+            return new Response("^^^^^", {
                 status: 200,
                 headers: { 'Content-Type': 'text/plain' },
             });
