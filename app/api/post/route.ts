@@ -39,8 +39,16 @@ export async function POST(request: Request) {
             attendance: true,
             attendance_time: dateText()
         }).eq('uid', uid)
-        const student = supabase.from('students').find(s => s.uid === uid);
-        return NextResponse.json(student);
+        const { data, error: fetchError } = await supabase
+            .from('students')
+            .select('studentId')
+            .eq('uid', uid)
+            .single(); // 단일 객체로 반환
+
+        if (fetchError) {
+            throw fetchError;
+        };
+        return NextResponse.json(data);
         //return NextResponse.json({ result: "sucwwwss" }, { status: 200 });
     } catch (error) {
         console.error('Error:', error);
