@@ -49,11 +49,12 @@ export async function POST(request: Request) {
             throw checkError;
         };
 
-        if (existingData.attendance):
+        if (existingData.attendance) {
             return new Response("^^^^^", {
                 status: 200,
                 headers: { 'Content-Type': 'text/plain' },
             });
+        }
         return new Response("^"+String(data.student_id), {
             status: 200,
             headers: { 'Content-Type': 'text/plain' },
