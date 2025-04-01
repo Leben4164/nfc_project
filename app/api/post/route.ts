@@ -41,7 +41,7 @@ export async function POST(request: Request) {
         }).eq('uid', uid)
         const { data, error: fetchError } = await supabase
             .from('students')
-            .select('studentId')
+            .select('student_id')
             .eq('uid', uid)
             .single(); // 단일 객체로 반환
 
