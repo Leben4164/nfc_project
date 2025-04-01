@@ -39,15 +39,21 @@ export async function POST(request: Request) {
             attendance: true,
             attendance_time: dateText()
         }).eq('uid', uid)
-        const { data, error: fetchError } = await supabase
+        const { data: existingData, error: checkError } = await supabase
             .from('students')
-            .select('student_id')
+            .select('attendance, student_id')
             .eq('uid', uid)
             .single(); // 단일 객체로 반환
 
-        if (fetchError) {
-            throw fetchError;
+        if (checkError) {
+            throw checkError;
         };
+
+        if (existingData.attendance):
+            return new Response("^0000", {
+                status: 200,
+                headers: { 'Content-Type': 'text/plain' },
+            });
         return new Response("^"+String(data.student_id), {
             status: 200,
             headers: { 'Content-Type': 'text/plain' },
