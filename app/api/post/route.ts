@@ -48,7 +48,7 @@ export async function POST(request: Request) {
         if (fetchError) {
             throw fetchError;
         };
-        return new Response(String(data.studentId), {
+        return new Response(String(data.student_id), {
             status: 200,
             headers: { 'Content-Type': 'text/plain' },
         });
