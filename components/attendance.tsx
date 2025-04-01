@@ -17,7 +17,10 @@ export function Attendance() {
     }, []);
 
     async function getStudents() {
-        const { data } = await supabase.from('students').select()
+        const { data } = await supabase
+            .from('students')
+            .select()
+            .order('student_id', { ascending: true });
         console.log(data)
         setStudents(data!)
     }
