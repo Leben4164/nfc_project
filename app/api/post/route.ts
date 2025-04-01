@@ -48,7 +48,10 @@ export async function POST(request: Request) {
         if (fetchError) {
             throw fetchError;
         };
-        return NextResponse.json(data);
+        return new Response(String(data.studentId), {
+            status: 200,
+            headers: { 'Content-Type': 'text/plain' },
+        });
         //return NextResponse.json({ result: "sucwwwss" }, { status: 200 });
     } catch (error) {
         console.error('Error:', error);
