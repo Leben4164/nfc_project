@@ -54,16 +54,16 @@ export async function POST(request: Request) {
             headers: { 'Content-Type': 'text/plain' },
         });
 
-        if (existingData.attendance) {
-            return new Response("^^^^^", {
-                status: 200,
-                headers: { 'Content-Type': 'text/plain' },
-            });
-        }
-        return new Response("^"+String(existingData.student_id), {
-            status: 200,
-            headers: { 'Content-Type': 'text/plain' },
-        });
+        // if (existingData.attendance) {
+        //     return new Response("^^^^^", {
+        //         status: 200,
+        //         headers: { 'Content-Type': 'text/plain' },
+        //     });
+        // }
+        // return new Response("^"+String(existingData.student_id), {
+        //     status: 200,
+        //     headers: { 'Content-Type': 'text/plain' },
+        // });
         //return NextResponse.json({ result: "sucwwwss" }, { status: 200 });
     } catch (error) {
         console.error('Error:', error);
