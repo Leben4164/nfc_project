@@ -49,7 +49,7 @@ export async function POST(request: Request) {
             throw checkError;
         };
 
-        return new Response(typeof(existingData.attendance), {
+        return new Response(toString(existingData.attendance), {
             status: 200,
             headers: { 'Content-Type': 'text/plain' },
         });
