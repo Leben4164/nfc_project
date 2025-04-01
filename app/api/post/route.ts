@@ -51,7 +51,7 @@ export async function POST(request: Request) {
         };
 
         if (existingData.attendance) {
-            return new Response("^^^^^", {
+            return new Response("^ALRE", {
                 status: 200,
                 headers: { 'Content-Type': 'text/plain' },
             });
