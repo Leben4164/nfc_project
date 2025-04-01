@@ -39,7 +39,9 @@ export async function POST(request: Request) {
             attendance: true,
             attendance_time: dateText()
         }).eq('uid', uid)
-        return NextResponse.json({ result: "sucwwwss" }, { status: 200 });
+        const student = students.find(s => s.uid === uid);
+        return NextResponse.json(student);
+        //return NextResponse.json({ result: "sucwwwss" }, { status: 200 });
     } catch (error) {
         console.error('Error:', error);
         return NextResponse.json({ error: '출석 처리 중 오류가 발생했습니다.' }, { status: 500 });
