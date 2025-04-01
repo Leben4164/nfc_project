@@ -7,42 +7,7 @@ import { Database } from '@/supabase';
 export function Attendance() {
     const [students, setStudents] = useState<Database['public']['Tables']['students']['Row'][]>([]);
     const [error, setError] = useState<string | undefined>();
-    const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
-    const [adminPassword, setAdminPassword] = useState(''); // 관리자 비밀번호 상태 추가
-    const [isAuthModalOpen, setIsAuthModalOpen] = useState(false); // 인증 모달 상태 추가
-    const supabase = createClient<Database>(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_KEY!)
-
-    useEffect(() => {
-        getStudents();
-    }, []);
-
-    async function getStudents() {
-        const { data } = await supabase.from('students').select()
-        console.log(data)
-        setStudents(data!)
-    }
-
-    /**
-     * 새로고침 함수
-     * 
-     * DB에서 정보를 가져와 학번을 기준으로 오름차 순으로 정렬함
-     */
-    async function refresh() {
-        getStudents()
-        console.log(students)
-
-    }
-    /**
-     * 출석 정보 초기화 함수
-     * 
-     * 모든 학생의 출석을 false로,
-     * 
-     * 출석 시간을 공백으로 바꾼다
-     */
-    async function reset(): Promise<void> {
-        setIsLoading(true); // 초기화 시작 시 로딩 상태 설정
-        try {
-            // attendance가 true인 데이터만 업데이트
+    const [isLoading, setIsLo트
             const { data } = await supabase.from('students').select();
             if (data) {
                 for (const student of data) {
@@ -53,7 +18,7 @@ export function Attendance() {
                     }).eq('id', student.id);
                 }
             }
-            alert('출석을 초기화??? 성공했습니다.')
+            alert('출석을 초기화하는 데 성공했습니다.')
         } catch (error) {
             console.error('출석 초기화 오류:', error);
             setError('출석을 초기화하는 중 오류가 발생했습니다.');
@@ -114,7 +79,7 @@ export function Attendance() {
                                     </span>
                                 </td>
                                 <td className="centered-cell">
-                                    {student.attendance_time ? student.attendance_time.split('.')[0] : '기록 되지 않음'}
+                                    {student.attendance_time ? student.attendance_time.split('.')[0] : '-'}
                                 </td>
                                 <td className="centered-cell">
                                     {student.attendance ? '-' : student.what_happen}
