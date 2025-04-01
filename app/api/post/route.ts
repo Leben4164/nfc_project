@@ -39,7 +39,7 @@ export async function POST(request: Request) {
             attendance: true,
             attendance_time: dateText()
         }).eq('uid', uid)
-        const student = students.find(s => s.uid === uid);
+        const student = supabase.from('students').find(s => s.uid === uid);
         return NextResponse.json(student);
         //return NextResponse.json({ result: "sucwwwss" }, { status: 200 });
     } catch (error) {
