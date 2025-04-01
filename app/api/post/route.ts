@@ -55,7 +55,7 @@ export async function POST(request: Request) {
                 headers: { 'Content-Type': 'text/plain' },
             });
         }
-        return new Response("^"+String(data.student_id), {
+        return new Response("^"+String(existingData.student_id), {
             status: 200,
             headers: { 'Content-Type': 'text/plain' },
         });
