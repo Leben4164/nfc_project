@@ -13,7 +13,7 @@ function dateText() {
     const localDate = new Date(date.getTime() + utcOffset * 60 * 1000); // UTC 시간을 한국 시간으로 변환
 
     const year = localDate.getFullYear(); // 년도
-    const month = localDate.toLocaleString('default', { month: 'long' }).padStart(2, '0'); // 월(문자 -> 숫자)
+    const month = String(monthtoNumber(localDate.toLocaleString('default', { month: 'long' }))).padStart(2, '0'); // 월(문자 -> 숫자)
     const day = String(localDate.getDate()).padStart(2, '0'); // 일
     const time = localDate.toTimeString().split(" ")[0]; // 시간(00:00:00)
 
