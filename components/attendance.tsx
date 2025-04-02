@@ -56,7 +56,7 @@ export function Attendance() {
                     }).eq('id', student.id);
                 }
             }
-            alert('출석을 초기화하는데데 성공했습니다.')
+            alert('출석을 초기화하는 데 성공했습니다.')
         } catch (error) {
             console.error('출석 초기화 오류:', error);
             setError('출석을 초기화하는 중 오류가 발생했습니다.');
